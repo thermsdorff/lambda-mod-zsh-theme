@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-local LAMBDA="%(?,%{$fg_bold[green]%}λ,%{$fg_bold[red]%}λ)"
+local LAMBDA="%(?,%{$fg_bold[green]%},%{$fg_bold[red]%})"
 if [[ "$USER" == "root" ]]; then USERCOLOR="red"; else USERCOLOR="yellow"; fi
 
 # Git sometimes goes into a detached head state. git_prompt_info doesn't
@@ -28,19 +28,32 @@ function get_right_prompt() {
     fi
 }
 
+function getNPMVersion() {
+    if [[ -f "./package.json" ]]; then
+         echo -n "%{$bg[green]$fg[black]%}  $(node -v) %{$reset_color%}"
+    fi
+}
+
+function getYarnVersion() {
+    if [[ -f "./package.json" ]]; then
+         echo -n "%{$bg_bold[blue]%}  $(yarn -v) %{$reset_color%}"
+    fi
+}
+
+
 PROMPT=$'\n'$LAMBDA'\
  %{$fg_bold[$USERCOLOR]%}%n\
  %{$fg_no_bold[magenta]%}[%'${LAMBDA_MOD_N_DIR_LEVELS:-3}'~]\
  $(check_git_prompt_info)\
 %{$reset_color%}'
 
-RPROMPT='$(get_right_prompt)'
+RPROMPT='$(getNPMVersion)$(getYarnVersion) $(get_right_prompt)'
 
 # Format for git_prompt_info()
-ZSH_THEME_GIT_PROMPT_PREFIX="at %{$fg[blue]%} "
+ZSH_THEME_GIT_PROMPT_PREFIX="at %{$fg[blue]%} "
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
 ZSH_THEME_GIT_PROMPT_DIRTY=""
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%} ✔"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[green]%} "
 
 # Format for git_prompt_status()
 ZSH_THEME_GIT_PROMPT_ADDED="%{$fg_bold[green]%}+"
