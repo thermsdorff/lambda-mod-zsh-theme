@@ -28,18 +28,21 @@ function get_right_prompt() {
     fi
 }
 
-function getNPMVersion() {
+function getNodeVersion() {
     if [[ -f "./package.json" ]]; then
          echo -n "%{$bg_bold[green]$fg[black]%}  $(node -v) %{$reset_color%}"
     fi
 }
 
-function getYarnVersion() {
+function getPackageManagerVersion() {
     if [[ -f "./package.json" ]]; then
-         echo -n "%{$bg_bold[cyan]$fg[black]%}  $(yarn -v) %{$reset_color%}"
+            if type yarn &>/dev/null 2>&1; then
+             echo -n "%{$bg_bold[cyan]$fg[black]%}  $(yarn -v) %{$reset_color%}"
+         else
+             echo -n "%{$bg_bold[cyan]$fg[black]%}  $(npm -v) %{$reset_color%}"
+         fi
     fi
 }
-
 
 PROMPT=$'\n'$LAMBDA'\
  %{$fg_bold[$USERCOLOR]%}%n\
@@ -47,7 +50,7 @@ PROMPT=$'\n'$LAMBDA'\
  $(check_git_prompt_info)\
 %{$reset_color%}'
 
-RPROMPT='$(getNPMVersion)$(getYarnVersion)$(get_right_prompt)'
+RPROMPT='$(getNodeVersion)$(getPackageManagerVersion)$(get_right_prompt)'
 
 # Format for git_prompt_info()
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg[blue]%} "
@@ -68,5 +71,5 @@ ZSH_THEME_GIT_PROMPT_AHEAD=" %{$fg_bold[white]%}"
 
 
 # Format for git_prompt_long_sha() and git_prompt_short_sha()
-ZSH_THEME_GIT_PROMPT_SHA_BEFORE="%{$bg[black]$fg[white]%}  ﰖ "
+ZSH_THEME_GIT_PROMPT_SHA_BEFORE="%{$bg[black]$fg[white]%} 󰜘 "
 ZSH_THEME_GIT_PROMPT_SHA_AFTER=" "
