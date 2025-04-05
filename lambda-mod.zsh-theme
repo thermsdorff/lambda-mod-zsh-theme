@@ -30,17 +30,19 @@ function get_right_prompt() {
 
 function getNodeVersion() {
     if [[ -f "./package.json" ]]; then
-         echo -n "%{$bg_bold[green]$fg[black]%}  $(node -v) %{$reset_color%}"
+         echo -n "%{$bg_bold[green]$fg[white]%}  $(node -v) %{$reset_color%}"
     fi
 }
 
 function getPackageManagerVersion() {
-    if [[ -f "./package.json" ]]; then
-            if type yarn &>/dev/null 2>&1; then
-             echo -n "%{$bg_bold[cyan]$fg[black]%}  $(yarn -v) %{$reset_color%}"
-         else
-             echo -n "%{$bg_bold[cyan]$fg[black]%}  $(npm -v) %{$reset_color%}"
-         fi
+    if [[ -f "package.json" ]]; then
+        if [[ -f "yarn.lock" ]]; then
+            echo -n "%{$bg_bold[cyan]$fg[white]%} Yarn $(yarn -v) %{$reset_color%}"
+        elif [[ -f "pnpm-lock.yaml" ]]; then
+            echo -n "%{$bg_bold[yellow]$fg[black]%} pnpm $(pnpm -v) %{$reset_color%}"
+        else
+            echo -n "%{$bg_bold[red]$fg[white]%} npm $(npm -v) %{$reset_color%}"
+        fi
     fi
 }
 
